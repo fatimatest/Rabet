@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0');
+
+:root {
+  --primary: #1D4C4F;
+  --primary-dark: #133638;
+  --light-teal: #89BABB;
+  --lighter-teal: #95C3C2;
+  --dark-text: #1D4C4F;
+  --light-text: #FFFFFF;
+  --secondary-text: #41676D;
+  --border: #6CB4B1;
+  --success: #2E7D32;
+  --success-light: #C8E6C9;
+  --error: #A8130B;
+  --error-light: #FFCDD2;
+  --warning: #E65100;
+  --warning-light: #FFF3E0;
+  --page-bg: #f7f9fb;
+  --card-bg: #FFFFFF;
+  --divider: #E8ECF0;
+  --sidebar-bg: #1D4C4F;
+  --sidebar-hover: rgba(255,255,255,0.1);
+  --sidebar-active: rgba(255,255,255,0.15);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Cairo', sans-serif;
+  direction: rtl;
+  background: var(--page-bg);
+  color: var(--dark-text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+  font-family: 'Cairo', sans-serif;
+  border: none;
+  outline: none;
+}
+
+input, textarea, select {
+  font-family: 'Cairo', sans-serif;
+  outline: none;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--divider);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--light-teal);
+  border-radius: 3px;
+}

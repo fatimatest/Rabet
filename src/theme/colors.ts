@@ -1,0 +1,27 @@
+export const colors = {
+  primary: '#1D4C4F',
+  primaryDark: '#133638',
+  background: '#FFFFFF',
+  lightTeal: '#89BABB',
+  lighterTeal: '#95C3C2',
+  darkText: '#1D4C4F',
+  lightText: '#FFFFFF',
+  secondaryText: '#41676D',
+  border: '#6CB4B1',
+
+  success: '#2E7D32',
+  successLight: '#C8E6C9',
+  error: '#A8130B',
+  errorLight: '#FFCDD2',
+  warning: '#E65100',
+  warningLight: '#FFF3E0',
+
+  sidebarBg: '#1D4C4F',
+  sidebarHover: 'rgba(255,255,255,0.1)',
+  sidebarActive: 'rgba(255,255,255,0.15)',
+  cardBg: '#FFFFFF',
+  pageBg: '#F5F7FA',
+  inputBg: '#95C3C2',
+  headerBg: '#1D4C4F',
+  divider: '#E8ECF0',
+};

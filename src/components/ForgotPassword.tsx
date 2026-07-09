@@ -19,7 +19,7 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = ({ onBack, onVerified }) =
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/auth/send-password-reset-otp",
+        "https://academic-system-backend.onrender.com/api/auth/send-password-reset-otp",
         { email }
       );
 

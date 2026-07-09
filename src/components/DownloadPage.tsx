@@ -22,7 +22,7 @@ const DownloadPage: React.FC<DownloadPageProps> = ({ onBack }) => {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/app-info")
+      .get("https://academic-system-backend.onrender.com/api/app-info")
       .then((res) => {
         if (res.data.success && res.data.data) {
           setAppInfo(res.data.data);

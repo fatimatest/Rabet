@@ -9,7 +9,7 @@ interface ResetPasswordProps {
   onSuccess: () => void;
 }
 
-const ResetPassword: React.FC<ResetPasswordProps> = ({ email, otp, onBack, onSuccess }) => {
+const ResetPassword: React.FC<ResetPasswordProps> = ({ email, onBack, onSuccess }) => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showNew, setShowNew] = useState(false);
@@ -43,7 +43,7 @@ const ResetPassword: React.FC<ResetPasswordProps> = ({ email, otp, onBack, onSuc
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/auth/update-forgotten-password",
+        "https://academic-system-backend.onrender.com/api/auth/update-forgotten-password",
         { email, password: newPassword }
       );
 

@@ -12,19 +12,19 @@ import {
   LayoutDashboard, Building2, Users, Shield, Calendar, Settings,
   BarChart3, FileText, UserCircle, LogOut, Bell, Search,
   Download, Save, Lock, Pencil, PlusCircle, Trash2, Eye, X,
-  CheckCircle, XCircle, ClipboardList, BookOpen, Award,
+  CheckCircle, ClipboardList, BookOpen, Award,
   GraduationCap, Layers, QrCode,
 } from "lucide-react";
 import axios from "axios";
 import SystemLogo from "./components/SystemLogo";
 import LogoutConfirmDialog from "./components/LogoutConfirmDialog";
 
-const LARAVEL_API = "http://127.0.0.1:8000/api";
+const LARAVEL_API = "https://academic-system-backend.onrender.com/api";
 const primary = "#1D4C4F";
-const cardWhite = "#FFFFFF";
+// cardWhite removed (unused)
 const textDark = "#2C3E3F";
 const textGray = "#6B7B6E";
-const accent = "#C9A96E";
+// accent removed (unused)
 const bgLight = "#f7f9fb";
 
 // ========== Shared Design System ==========
@@ -485,7 +485,7 @@ const UsersPage: React.FC = () => {
     role: "", qr_token: ""
   });
   const [regeneratingQr, setRegeneratingQr] = useState(false);
-  const [qrToken, setQrToken] = useState("");
+  // qrToken removed (unused)
   const [editUserData, setEditUserData] = useState<any>(null);
 
   const fetchUsers = useCallback(async () => {
@@ -1021,17 +1021,7 @@ const UsersPage: React.FC = () => {
 };
 
 // ================= إدارة الأدوار =================
-const permissionNames: Record<string, string> = {
-  full_access: "الوصول الكامل", manage_users: "إدارة المستخدمين",
-  manage_colleges: "إدارة الكليات", manage_departments: "إدارة الأقسام",
-  manage_subjects: "إدارة المواد", manage_doctors: "إدارة الدكاترة",
-  manage_students: "إدارة الطلاب", manage_semesters: "إدارة الأترام",
-  manage_roles: "إدارة الأدوار", view_reports: "عرض التقارير",
-  view_audit: "عرض سجل العمليات", system_settings: "إعدادات النظام",
-  manage_courses: "إدارة المقرر", grade_tasks: "تصحيح التكاليف",
-  attendance: "تسجيل الحضور", view_subjects: "عرض المواد",
-  submit_tasks: "تسليم التكاليف", take_quizzes: "أداء الكويزات",
-};
+// permissionNames removed (unused)
 
 const RolesPage: React.FC = () => {
   const [roles, setRoles] = useState<any[]>([]);
@@ -1478,7 +1468,7 @@ const ReportsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [colleges, setColleges] = useState<any[]>([]);
   const [departments, setDepartments] = useState<any[]>([]);
-  const [terms, setTerms] = useState<any[]>([]);
+  const [, setTerms] = useState<any[]>([]);
   const [filters, setFilters] = useState<any>({});
   const [availableLevels, setAvailableLevels] = useState<number[]>([]);
 
@@ -1818,12 +1808,6 @@ const AuditLogPage: React.FC = () => {
       document.body.appendChild(link); link.click();
       document.body.removeChild(link); URL.revokeObjectURL(link.href);
     } catch { alert("خطأ في التصدير"); }
-  };
-
-  const formatTime = (t: string) => {
-    if (!t) return "";
-    const d = new Date(t);
-    return d.toLocaleDateString("ar-SA", { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
   };
 
   const totalPages = Math.ceil(total / 100);

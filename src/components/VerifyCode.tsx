@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { MailCheck } from "lucide-react";
 import axios from "axios";
 
@@ -44,7 +44,7 @@ const VerifyCode: React.FC<VerifyCodeProps> = ({ email, onBack, onVerified }) =>
 
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/auth/reset-password-verify-otp",
+        "https://academic-system-backend.onrender.com/api/auth/reset-password-verify-otp",
         { email, otp: code }
       );
 

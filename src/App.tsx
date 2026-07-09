@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import AuthScreen from "./components/AuthScreen";
 import Student from "./student";
@@ -66,19 +66,19 @@ function App() {
   }
 
   if (role === "student") {
-    return <Student userData={userData} onLogout={handleLogout} />;
+    return <Student />;
   }
 
   if (role === "doctor") {
-    return <Doctor userData={userData} onLogout={handleLogout} />;
+    return <Doctor onLogout={handleLogout} />;
   }
 
   if (role === "system_admin") {
-    return <Mnagment userData={userData} onLogout={handleLogout} />;
+    return <Mnagment onLogout={handleLogout} />;
   }
 
   if (role === "college_manager") {
-    return <Mm userData={userData} onLogout={handleLogout} />;
+    return <Mm onLogout={handleLogout} />;
   }
 
   // Fallback: show role name for debugging

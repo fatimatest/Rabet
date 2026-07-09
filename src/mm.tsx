@@ -13,7 +13,7 @@ import {
   BarChart3, UserCircle, LogOut, Bell,
   Download, Save, Lock, Pencil, PlusCircle, Trash2, Eye, X,
   ClipboardList, Award, Link2, Layers, GraduationCap,
-  Mail, CheckCircle,
+  CheckCircle,
   Settings, Search, FileText,
 } from "lucide-react";
 import SystemLogo from "./components/SystemLogo";
@@ -23,8 +23,6 @@ import * as XLSX from "xlsx";
 const primary = "#1D4C4F";
 const green = "#28a745";
 const red = "#dc3545";
-const blue = "#0d6efd";
-const orange = "#fd7e14";
 const cardWhite = "#FFFFFF";
 const textDark = "#2C3E3F";
 const textGray = "#6B7B6E";
@@ -38,9 +36,7 @@ const pageTitleStyle = { marginBottom: "25px", color: primary, fontSize: "24px",
 const pageContainer = { padding: "24px", marginRight: "260px", color: "#000", width: "calc(100% - 260px)" };
 const btnPrimary = { background: primary, color: "#fff", border: "none", padding: "10px 22px", borderRadius: "8px", cursor: "pointer", fontSize: "13px", fontWeight: 600, display: "flex", alignItems: "center", gap: "6px", transition: "all 0.2s" };
 const btnOutline = { background: "transparent", color: primary, border: `1px solid ${primary}`, padding: "10px 22px", borderRadius: "8px", cursor: "pointer", fontSize: "13px", fontWeight: 600, display: "flex", alignItems: "center", gap: "6px" };
-const btnDanger = { background: red, color: "#fff", border: "none", padding: "10px 22px", borderRadius: "8px", cursor: "pointer", fontSize: "13px", fontWeight: 600, display: "flex", alignItems: "center", gap: "6px" };
-
-const iconBox = (bg: string) => ({ width: "46px", height: "46px", borderRadius: "10px", background: bg, display: "flex", alignItems: "center", justifyContent: "center" });
+// btnDanger removed (unused)
 
 const sidebarMenuIcons: Record<string, React.ReactNode> = {
   "/": <LayoutDashboard size={20} />,
@@ -142,7 +138,7 @@ const CollegeManagerSidebar: React.FC<{ onLogout: () => void }> = ({ onLogout })
 };
 
 // ================= TopBar =================
-const API = "http://127.0.0.1:8000/api";
+const API = "https://academic-system-backend.onrender.com/api";
 
 const TopBar: React.FC = () => {
   const [notifCount, setNotifCount] = useState(0);
@@ -241,7 +237,7 @@ const Dashboard: React.FC = () => {
   const [stats, setStats] = useState<any>(null);
   const [activities, setActivities] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const API = "http://127.0.0.1:8000/api/admin";
+  const API = "https://academic-system-backend.onrender.com/api/admin";
 
   const collegeId = (() => { try { const u = JSON.parse(localStorage.getItem("user") || "{}"); return u.college_id; } catch { return null; } })();
 
@@ -274,20 +270,6 @@ const Dashboard: React.FC = () => {
     { key: "connections", label: "ارتباطات", icon: <ClipboardList size={22} />, value: loading ? "..." : (stats?.connections ?? "0") },
     { key: "announcements", label: "الإعلانات", icon: <Bell size={22} />, value: loading ? "..." : (stats?.announcements ?? "0") },
   ];
-
-  const activityIcons: Record<string, React.ReactNode> = {
-    plus: <PlusCircle size={16} />,
-    edit: <Pencil size={16} />,
-    trash: <Trash2 size={16} />,
-    check: <CheckCircle size={16} />,
-    x: <X size={16} />,
-    link: <Link2 size={16} />,
-    'help-circle': <ClipboardList size={16} />,
-    'file-text': <ClipboardList size={16} />,
-    upload: <Download size={16} />,
-    bell: <Bell size={16} />,
-    clipboard: <ClipboardList size={16} />,
-  };
 
   const formatTime = (t: string) => {
     if (!t) return '';
@@ -382,7 +364,7 @@ const DepartmentsPage: React.FC = () => {
   const [search, setSearch] = useState("");
   const [form, setForm] = useState({ id: null as number | null, name: "", study_type: "", code: "", description: "", levels_count: "" });
   const [selectedDept, setSelectedDept] = useState<any>(null);
-  const API = "http://127.0.0.1:8000/api/admin";
+  const API = "https://academic-system-backend.onrender.com/api/admin";
   const collegeId = (() => { try { const u = JSON.parse(localStorage.getItem("user") || "{}"); return u.college_id; } catch { return null; } })();
 
   useEffect(() => { fetchDepartments(); }, []);
@@ -522,7 +504,7 @@ const DepartmentsPage: React.FC = () => {
 
 // ================= إدارة المواد =================
 const SubjectsPage: React.FC = () => {
-  const API = "http://127.0.0.1:8000/api/admin";
+  const API = "https://academic-system-backend.onrender.com/api/admin";
   const collegeId = (() => { try { const u = JSON.parse(localStorage.getItem("user") || "{}"); return u.college_id; } catch { return null; } })();
   const [subjects, setSubjects] = useState<any[]>([]);
   const [departments, setDepartments] = useState<any[]>([]);
@@ -822,7 +804,7 @@ const SubjectsPage: React.FC = () => {
 
 // ================= إدارة الدكاترة =================
 const InstructorsPage: React.FC = () => {
-  const API = "http://127.0.0.1:8000/api/admin";
+  const API = "https://academic-system-backend.onrender.com/api/admin";
   const collegeId = (() => { try { const u = JSON.parse(localStorage.getItem("user") || "{}"); return u.college_id; } catch { return null; } })();
   const [instructors, setInstructors] = useState<any[]>([]);
   const [departments, setDepartments] = useState<any[]>([]);
@@ -987,7 +969,7 @@ const InstructorsPage: React.FC = () => {
 
 // ================= إدارة الأترام =================
 const SemestersPage: React.FC = () => {
-  const API = "http://127.0.0.1:8000/api/admin";
+  const API = "https://academic-system-backend.onrender.com/api/admin";
   const [semesters, setSemesters] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
@@ -1126,13 +1108,13 @@ const SemestersPage: React.FC = () => {
 
 // ================= ربط المواد =================
 const CourseOfferingPage: React.FC = () => {
-  const API = "http://127.0.0.1:8000/api/admin";
+  const API = "https://academic-system-backend.onrender.com/api/admin";
   const collegeId = (() => { try { const u = JSON.parse(localStorage.getItem("user") || "{}"); return u.college_id; } catch { return null; } })();
   const [offerings, setOfferings] = useState<any[]>([]);
   const [departments, setDepartments] = useState<any[]>([]);
   const [subjects, setSubjects] = useState<any[]>([]);
   const [doctors, setDoctors] = useState<any[]>([]);
-  const [terms, setTerms] = useState<any[]>([]);
+  const [, setTerms] = useState<any[]>([]);
   const [activeTerm, setActiveTerm] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [showAdd, setShowAdd] = useState(false);
@@ -1396,7 +1378,7 @@ const CourseOfferingPage: React.FC = () => {
 
 // ================= التقارير =================
 const ReportsPage: React.FC = () => {
-  const API = "http://127.0.0.1:8000/api/admin";
+  const API = "https://academic-system-backend.onrender.com/api/admin";
   const collegeId = (() => { try { const u = JSON.parse(localStorage.getItem("user") || "{}"); return u.college_id; } catch { return null; } })();
   const [exporting, setExporting] = useState<string | null>(null);
   const [showFilter, setShowFilter] = useState(false);
@@ -1650,7 +1632,7 @@ const ReportsPage: React.FC = () => {
 
 // ================= الملف الشخصي =================
 const ProfilePage: React.FC = () => {
-  const API = "http://127.0.0.1:8000/api/admin";
+  const API = "https://academic-system-backend.onrender.com/api/admin";
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -1853,12 +1835,6 @@ const AuditLogPage: React.FC = () => {
     } catch { alert("خطأ في التصدير"); }
   };
 
-  const formatTime = (t: string) => {
-    if (!t) return "";
-    const d = new Date(t);
-    return d.toLocaleDateString("ar-SA", { year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
-  };
-
   const totalPages = Math.ceil(total / 100);
 
   return (
@@ -1975,7 +1951,7 @@ const OfficialStudentsPage: React.FC = () => {
   const [importFiles, setImportFiles] = useState<File[]>([]);
   const [importLoading, setImportLoading] = useState(false);
   const [form, setForm] = useState({ academic_number: "", student_name: "", department_id: "", level: "" });
-  const API = "http://127.0.0.1:8000/api/admin";
+  const API = "https://academic-system-backend.onrender.com/api/admin";
   const collegeId = (() => { try { const u = JSON.parse(localStorage.getItem("user") || "{}"); return u.college_id; } catch { return null; } })();
 
   useEffect(() => { fetchStudents(); fetchDepartments(); }, []);
@@ -2244,7 +2220,7 @@ const AnnouncementsPage: React.FC = () => {
   const user = (() => { try { return JSON.parse(localStorage.getItem("user") || "{}"); } catch { return {}; } })();
   const collegeId = user.college_id;
   const senderId = user.id;
-  const API = "http://127.0.0.1:8000/api/admin";
+  const API = "https://academic-system-backend.onrender.com/api/admin";
 
   const fetchAnnouncements = useCallback(async () => {
     try {

@@ -8,18 +8,16 @@ import LogoutConfirmDialog from "./components/LogoutConfirmDialog";
 import {
   LayoutDashboard, BookOpen, ClipboardCheck, FileQuestion, FileText,
   Award, UserCircle, LogOut, Bell, Search, Users, BarChart3,
-  Layers, CheckCircle, XCircle, GraduationCap, School,
+  Layers, CheckCircle, XCircle, GraduationCap,
   Building2, FolderOpen, CalendarCheck, CalendarPlus, QrCode,
-  Lock, Unlock, PlusCircle, Eye, Pencil, Trash2,
-  BadgeCheck, Star, Save, FileSpreadsheet, Scale,
-  ChartPie, Filter, Mail, Phone, LockKeyhole,
-  EyeOff, Key, BellRing, ShieldCheck, X, Wifi,
-  CheckCheck, Home, ArrowRightFromLine, UserMinus,
+  Lock, PlusCircle, Eye, Pencil, Trash2,
+  Star, Save, Scale,
+  ArrowRightFromLine,
   Upload, Download, ClipboardList, ClipboardCopy, ChevronDown, ChevronUp, Clock,
 } from "lucide-react";
 
 // ================= إعدادات الـ API =================
-const API = "http://127.0.0.1:8000/api";
+const API = "https://academic-system-backend.onrender.com/api";
 const primary: string = "#1D4C4F";
 
 // ================= Helper Functions =================
@@ -71,30 +69,9 @@ interface User {
   department_name?: string;
 }
 
-interface Subject {
-  id: number;
-  name: string;
-  code: string;
-  department_id: number;
-}
-
-interface CourseOffering {
-  id: number;
-  subject_id: number;
-  doctor_id: number;
-  term_id: number;
-  level: number;
-  department_id: number;
-  subject_name?: string;
-  subject_code?: string;
-  doctor_name?: string;
-  department_name?: string;
-  term_name?: string;
-  study_type?: string;
-}
-
 interface Assignment {
   id: number;
+  subject_id?: number;
   offering_id: number;
   creator_id: number;
   title: string;
@@ -126,81 +103,7 @@ interface Submission {
   assignment_max_grade?: number;
 }
 
-interface AttendanceSession {
-  id: number;
-  course_offering_id: number;
-  doctor_id: number;
-  session_token: string;
-  qr_code_value: string;
-  start_time: string;
-  end_time?: string;
-  is_active: boolean;
-  offering_name?: string;
-  session_number?: number;
-}
-
-interface AttendanceRecord {
-  id: number;
-  attendance_session_id: number;
-  student_id: number;
-  status: 'present' | 'absent' | 'late';
-  scanned_at?: string;
-  student_name?: string;
-}
-
-interface Grade {
-  id: number;
-  student_id: number;
-  offering_id: number;
-  attendance_grade: number;
-  assignments_grade: number;
-  quizzes_grade: number;
-  midterm_grade: number;
-  final_exam_grade: number;
-  total_grade: number;
-  updated_at: string;
-  student_name?: string;
-  subject_name?: string;
-  major_name?: string;
-}
-
-interface JoinRequest {
-  id: number;
-  student_id: number;
-  offering_id: number;
-  status: 'pending' | 'approved' | 'rejected';
-  rejection_reason?: string;
-  created_at: string;
-  updated_at: string;
-  student_name?: string;
-  subject_name?: string;
-  student_major?: string;
-}
-
-interface Department {
-  id: number;
-  name: string;
-  college_id: number;
-  levels_count: number;
-}
-
-interface Notification {
-  id: number;
-  user_id: number;
-  type: string;
-  title: string;
-  body?: string;
-  message: string;
-  notification_type: string;
-  reference_type?: string;
-  reference_id?: number;
-  offering_id?: number;
-  is_read: boolean;
-  created_at: string;
-}
-
 // ================= قائمة الأقسام =================
-const majorsList = ["الكل", "علوم الحاسب", "نظم المعلومات", "تكنولوجيا المعلومات", "تقنية المعلومات", "هندسة البرمجيات", "الأمن المعلوماتي", "الشبكات والاتصالات"];
 
 const menuIcons: Record<string, React.ReactNode> = {
   "/": <LayoutDashboard size={20} />,
@@ -296,8 +199,6 @@ const DoctorSidebar: React.FC<{ doctorInfo: User | null, onLogout: () => void }>
 };
 
 const TopBar: React.FC<{ doctorInfo: User | null }> = ({ doctorInfo }) => {
-  const location = useLocation();
-  const isDashboard = location.pathname === '/';
   const [notificationsCount, setNotificationsCount] = useState(0);
   const [showNotifications, setShowNotifications] = useState(false);
   const [notificationsList, setNotificationsList] = useState<any[]>([]);
@@ -782,9 +683,8 @@ const Dashboard: React.FC = () => {
 };
 
 // ================= Attendance Page =================
-const AttendancePage: React.FC = (): JSX.Element => {
+const AttendancePage: React.FC = (): React.JSX.Element => {
   const primary = "#1D4C4F";
-  const primaryDark = "#0D2E30";
   const successColor = "#2e7d32";
   const errorColor = "#c62828";
 
@@ -816,7 +716,7 @@ const AttendancePage: React.FC = (): JSX.Element => {
   const [expandedTab, setExpandedTab] = useState<'present' | 'absent'>('present');
 
   const [activeDetails, setActiveDetails] = useState<any>(null);
-  const [activeDetailsLoading, setActiveDetailsLoading] = useState(false);
+  const [, setActiveDetailsLoading] = useState(false);
   const [activeDetailsTab, setActiveDetailsTab] = useState<'present' | 'absent'>('present');
 
   const timerRef = useRef<number>(30);
@@ -1581,103 +1481,7 @@ const AttendancePage: React.FC = (): JSX.Element => {
   );
 };
 
-// Session Card Component
-const SessionCard: React.FC<{
-  session: any; index: number; isOpen: boolean;
-  onClose: () => void; onRefresh: () => void;
-  onViewAttendees: () => void; copyToClipboard: (t: string) => void;
-}> = ({ session, index, isOpen, onClose, onRefresh, onViewAttendees, copyToClipboard }) => {
-  const [timeLeft, setTimeLeft] = useState(30);
-
-  useEffect(() => {
-    if (!isOpen) return;
-    const interval = setInterval(() => {
-      setTimeLeft(prev => {
-        if (prev <= 1) {
-          onRefresh();
-          return 30;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [isOpen, onRefresh]);
-
-  return (
-    <div style={{ marginBottom: 14, padding: 16, background: "#fff", borderRadius: 16, border: isOpen ? `1px solid ${primary}33` : "1px solid #eee", boxShadow: "0 2px 8px rgba(0,0,0,0.04)" }}>
-      <div style={{ display: "flex", alignItems: "center", marginBottom: 12 }}>
-        <div style={{ padding: 10, borderRadius: 12, background: isOpen ? "#e8f5e9" : "#f5f5f5", marginLeft: 12, display: "flex" }}>
-          {isOpen ? <Wifi size={20} color="#2e7d32" /> : <Lock size={20} color="#999" />}
-        </div>
-        <div style={{ flex: 1 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-            <span style={{ padding: "2px 10px", borderRadius: 8, fontSize: 10, fontWeight: 700, background: isOpen ? "#e8f5e9" : "#f0f0f0", color: isOpen ? "#2e7d32" : "#999" }}>
-              {isOpen ? 'مفتوحة' : 'مغلقة'}
-            </span>
-            <span style={{ fontSize: 11, color: "#999", fontWeight: 700 }}>#{index + 1}</span>
-          </div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 12, color: "#666" }}>
-            <CalendarCheck size={12} />
-            <span>{session.session_date || (session.start_time ? new Date(session.start_time).toLocaleDateString("ar-SA") : '')}</span>
-            <span>·</span>
-            <span>{session.start_time ? new Date(session.start_time).toLocaleTimeString("ar-SA", { hour: '2-digit', minute: '2-digit' }) : ''}</span>
-          </div>
-        </div>
-        <div style={{ textAlign: "center" }}>
-          <div style={{ fontSize: 20, fontWeight: 700, color: isOpen ? "#2e7d32" : primary }}>{session.attendee_count || 0}</div>
-          <div style={{ fontSize: 10, color: "#999", fontWeight: 700 }}>حاضر</div>
-        </div>
-      </div>
-
-      {/* Offering / Department name */}
-      {session.offering_name && (
-        <div style={{ fontSize: 12, color: "#666", marginBottom: 8, padding: "4px 10px", background: "#f9f9f9", borderRadius: 8 }}>
-          <BookOpen size={12} style={{ marginLeft: 4 }} />{session.offering_name}
-        </div>
-      )}
-
-      {isOpen && (
-        <>
-          {/* Token display */}
-          {session.session_token && (
-            <div style={{ display: "flex", alignItems: "center", background: "#f0f7f7", padding: "8px 12px", borderRadius: 10, marginBottom: 10, border: "1px solid #d0e4e4" }}>
-              <Key size={14} color={primary} style={{ marginLeft: 8 }} />
-              <span style={{ fontSize: 12, fontWeight: 700, color: primary, fontFamily: "monospace", flex: 1, overflow: "hidden", textOverflow: "ellipsis" }}>{session.session_token}</span>
-              <button onClick={() => copyToClipboard(session.session_token)} style={{ background: primary, border: "none", borderRadius: 8, color: "#fff", padding: "5px 10px", cursor: "pointer", fontSize: 11 }}>
-                نسخ
-              </button>
-            </div>
-          )}
-
-          {/* QR Code - Flutter-style with larger size */}
-          {session.qr_code_value && (
-            <div style={{ textAlign: "center", marginBottom: 16, background: "#fff", borderRadius: 16, padding: 20, border: `2px solid ${primary}40`, boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}>
-              <div style={{ display: "inline-block", padding: 16, borderRadius: 16, border: `3px solid ${primary}`, background: "#fff" }}>
-                <QRCodeCanvas value={session.qr_code_value} size={260} level="H" includeMargin={true} />
-              </div>
-              <p style={{ fontSize: 15, fontWeight: 700, color: primary, marginTop: 12, marginBottom: 4 }}>
-                امسح لتسجيل الحضور
-              </p>
-              <p style={{ fontSize: 13, color: "#c62828", fontWeight: 700 }}>
-                يتجدد الرمز تلقائياً خلال: {timeLeft} ثانية
-              </p>
-            </div>
-          )}
-
-          {/* Close Button */}
-          <button onClick={onClose} style={{ width: "100%", padding: "10px", background: "#ffebee", color: "#c62828", border: "none", borderRadius: 10, cursor: "pointer", fontWeight: 700, fontSize: 13, marginBottom: 8 }}>
-            <Lock size={14} style={{ marginLeft: 6 }} /> إغلاق الجلسة
-          </button>
-        </>
-      )}
-
-      {/* View Attendees */}
-      <button onClick={onViewAttendees} style={{ width: "100%", padding: "8px", background: "none", color: primary, border: "none", cursor: "pointer", fontWeight: 600, fontSize: 12 }}>
-        <Users size={14} style={{ marginLeft: 6 }} /> عرض الحضور
-      </button>
-    </div>
-  );
-};
+// Session Card Component (removed - unused)
 
 // ================= Subjects Page =================
 const SubjectsPage: React.FC = () => {
@@ -1828,7 +1632,7 @@ const CourseManagementPage: React.FC = () => {
   };
 
   // ---- Course Settings ----
-  const [settings, setSettings] = useState<any>(null);
+  const [, setSettings] = useState<any>(null);
   const [settingsLoading, setSettingsLoading] = useState(false);
   const [editSettings, setEditSettings] = useState({
     lecture_count: 0, attendance_session_count: 0,
@@ -2019,14 +1823,7 @@ const CourseManagementPage: React.FC = () => {
     } catch { alert("حدث خطأ"); }
   };
 
-  const handleRemoveStudent = async (enrollmentId: number) => {
-    if (!confirm("تأكيد إزالة الطالب من المادة؟")) return;
-    try {
-      const res = await fetch(`${API}/student-enrollments/${enrollmentId}`, { method: 'DELETE' });
-      const data = await res.json();
-      if (data.success) { setStudents(students.filter(s => s.enrollment_id !== enrollmentId)); alert("تمت الإزالة"); } else alert(data.message);
-    } catch { alert("حدث خطأ"); }
-  };
+  // handleRemoveStudent removed (unused)
 
   const openGradeModal = (student: any) => {
     setEditGrade({
@@ -2800,6 +2597,7 @@ const QuizzesPage: React.FC = () => {
     return <div style={{ padding: "20px", marginRight: "260px", width: "calc(100% - 260px)" }}>جاري التحميل...</div>;
   }
 
+  type _OfferingItem = { id: number; department_name?: string };
   return (
     <div style={{ padding: "20px", marginRight: "260px", color: "#000", width: "calc(100% - 260px)" }}>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}>
@@ -2966,7 +2764,7 @@ const QuizzesPage: React.FC = () => {
                 padding: "4px 12px", borderRadius: "6px",
                 cursor: "pointer", fontWeight: 600, fontSize: "12px"
               }}>كل التخصصات</button>
-              {filterOfferings.map(o => (
+              {filterOfferings.map((o: _OfferingItem) => (
                 <button key={o.id} onClick={() => setFilterOfferingId(o.id)} style={{
                   background: filterOfferingId === o.id ? primary : "transparent",
                   color: filterOfferingId === o.id ? "#fff" : "#333",
@@ -3233,6 +3031,7 @@ const AssignmentsPage: React.FC = () => {
     return <div style={{ padding: "20px", marginRight: "260px", width: "calc(100% - 260px)" }}>جاري التحميل...</div>;
   }
 
+  type _OfferingItem = { id: number; department_name?: string };
   return (
     <div style={{ padding: "20px", marginRight: "260px", color: "#000", width: "calc(100% - 260px)" }}>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}>
@@ -3399,7 +3198,7 @@ const AssignmentsPage: React.FC = () => {
                 padding: "4px 12px", borderRadius: "6px",
                 cursor: "pointer", fontWeight: 600, fontSize: "12px"
               }}>كل التخصصات</button>
-              {filterOfferings.map(o => (
+              {filterOfferings.map((o: _OfferingItem) => (
                 <button key={o.id} onClick={() => setFilterOfferingId(o.id)} style={{
                   background: filterOfferingId === o.id ? primary : "transparent",
                   color: filterOfferingId === o.id ? "#fff" : "#333",
@@ -3643,7 +3442,7 @@ const GradesPage: React.FC = () => {
   const [studentsLoading, setStudentsLoading] = useState(false);
   const [showBalancing, setShowBalancing] = useState(false);
   const [weights, setWeights] = useState({ attendance: 10, assignments: 20, quizzes: 20, midterm: 20, final: 30 });
-  const [weightsLoading, setWeightsLoading] = useState(false);
+  const [, setWeightsLoading] = useState(false);
   const [gradeModal, setGradeModal] = useState<{ open: boolean; student: any }>({ open: false, student: null });
   const [editGrade, setEditGrade] = useState({
     attendance_grade: 0, assignments_grade: 0, quizzes_grade: 0,
@@ -4354,7 +4153,7 @@ const SubmissionsStatusPage: React.FC = () => {
 const StudentSubmissionsPage: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { studentId, offeringId, studentName, doctorId: stateDocId } = location.state || {};
+  const { studentId, offeringId, studentName } = location.state || {};
   const [items, setItems] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [editData, setEditData] = useState<{ [key: number]: { grade: string; notes: string } }>({});

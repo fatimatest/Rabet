@@ -36,7 +36,7 @@ const DownloadPage: React.FC<DownloadPageProps> = ({ onBack }) => {
 
   const handleDownload = () => {
     if (appInfo?.apk_url) {
-      window.open(appInfo.apk_url, "_blank");
+      window.location.href = appInfo.apk_url;
     }
   };
 
